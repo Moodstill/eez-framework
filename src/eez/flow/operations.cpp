@@ -2595,6 +2595,54 @@ static void do_OPERATION_TYPE_LVGL_METER_TICK_INDEX(EvalStack &stack) {
     stack.push(g_eezFlowLvlgMeterTickIndex);
 }
 
+static void do_OPERATION_TYPE_LVGL_COLOR_DARKEN(EvalStack &stack) {
+#if defined(EEZ_FOR_LVGL)
+    Value color = stack.pop().getValue();
+    Value level = stack.pop().getValue();
+
+    if (!color.isInt32OrLess() || !level.isInt32OrLess()) {
+        stack.push(Value::makeError());
+        return;        
+    }
+
+    auto adjustedColor = lv_color_darken(lv_color_hex(color.getUInt32()), (uint8_t)level.getUInt32());
+
+#if LVGL_VERSION_MAJOR >= 9
+    uint32_t result = lv_color_to_u32(adjustedColor);
+#else
+    uint32_t result = lv_color_to32(adjustedColor);
+#endif
+    
+    stack.push(Value(result, VALUE_TYPE_UINT32));
+#else
+    stack.push(Value::makeError());
+#endif
+}
+
+static void do_OPERATION_TYPE_LVGL_COLOR_LIGHTEN(EvalStack &stack) {
+#if defined(EEZ_FOR_LVGL)
+    Value color = stack.pop().getValue();
+    Value level = stack.pop().getValue();
+
+    if (!color.isInt32OrLess() || !level.isInt32OrLess()) {
+        stack.push(Value::makeError());
+        return;        
+    }
+
+    auto adjustedColor = lv_color_lighten(lv_color_hex(color.getUInt32()), (uint8_t)level.getUInt32());
+
+#if LVGL_VERSION_MAJOR >= 9
+    uint32_t result = lv_color_to_u32(adjustedColor);
+#else
+    uint32_t result = lv_color_to32(adjustedColor);
+#endif
+    
+    stack.push(Value(result, VALUE_TYPE_UINT32));
+#else
+    stack.push(Value::makeError());
+#endif
+}
+
 static void do_OPERATION_TYPE_CRYPTO_SHA256(EvalStack &stack) {
 #if EEZ_FOR_LVGL_SHA256_OPTION
     auto value = stack.pop().getValue();
@@ -2916,6 +2964,8 @@ EvalOperation g_evalOperations[] = {
     do_OPERATION_TYPE_BLOB_TO_STRING,
     do_OPERATION_TYPE_FLOW_THEMES,
     do_OPERATION_TYPE_FLOW_GET_THEME_COLOR,
+    do_OPERATION_TYPE_LVGL_COLOR_DARKEN,
+    do_OPERATION_TYPE_LVGL_COLOR_LIGHTEN,
 };
 
 } // namespace flow
