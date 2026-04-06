@@ -480,10 +480,10 @@ void drawStrInit() {
     pcolorBGRA[0] = COLOR_TO_B(color);
     pcolorBGRA[1] = COLOR_TO_G(color);
     pcolorBGRA[2] = COLOR_TO_R(color);
-    pcolorBGRA[3] = 255;
+    pcolorBGRA[3] = g_opacity;
 
     hdma2d.LayerCfg[1].InputColorMode = DMA2D_INPUT_A8;
-    hdma2d.LayerCfg[1].AlphaMode = DMA2D_NO_MODIF_ALPHA;
+    hdma2d.LayerCfg[1].AlphaMode = DMA2D_COMBINE_ALPHA;
     hdma2d.LayerCfg[1].InputAlpha = colorBGRA;
     hdma2d.LayerCfg[1].InputOffset = 0;
 
