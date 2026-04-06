@@ -242,7 +242,7 @@ static FlowState *initFlowState(Assets *assets, int flowIndex, FlowState *parent
 
 	for (unsigned i = 0; i < flow->localVariables.count; i++) {
 		auto value = flow->localVariables[i];
-		flowState->values[flow->componentInputs.count + i] = *value;
+		flowState->values[flow->componentInputs.count + i] = value->clone();
 	}
 
 	for (unsigned i = 0; i < flow->components.count; i++) {
